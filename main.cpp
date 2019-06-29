@@ -4,96 +4,103 @@
 using namespace std;
 
 // Иерархия мемов
-class Meme
-{
+class Meme {
 public:
     virtual string info() = 0;
+
     virtual ~Meme() {
     }
 };
 
-class LegendaryMeme: public Meme
-{
+class LegendaryMeme : public Meme {
 public:
     string info() {
-        return  "LegendaryMeme" ;
+        return "LegendaryMeme";
     };
 };
 
-class AnimeMeme: public Meme
-{
+class AnimeMeme : public Meme {
 public:
     string info() {
-        return  "AnimeMeme" ;
+        return "AnimeMeme";
     };
 };
 
-class HahaMeme: public Meme
-{
+class HahaMeme : public Meme {
 public:
     string info() {
-        return  "HahaMeme" ;
+        return "HahaMeme";
     };
 };
 
-class PolitMeme: public Meme
-{
+class PolitMeme : public Meme {
 public:
     string info() {
-        return "PolitMeme" ;
+        return "PolitMeme";
     };
 };
 
 
 // Фабрики объектов
-class Factory
-{
+class Factory {
 public:
-    virtual Meme* createMeme() = 0;
+    virtual Meme *createMeme() = 0;
+
     virtual ~Factory() {}
 };
 
-class LegendaryFactory: public Factory
-{
+class LegendaryFactory : public Factory {
 public:
-    Meme* createMeme() {
+    Meme *createMeme() {
         return new LegendaryMeme;
     }
 };
 
-class AnimeFactory: public Factory
-{
+class AnimeFactory : public Factory {
 public:
-    Meme* createMeme() {
+    Meme *createMeme() {
         return new AnimeMeme;
     }
 };
 
-class HahaFactory: public Factory
-{
+class HahaFactory : public Factory {
 public:
-    Meme* createMeme() {
+    Meme *createMeme() {
         return new HahaMeme;
     }
 };
 
-class PolitFactory: public Factory
-{
+class PolitFactory : public Factory {
 public:
-    Meme* createMeme() {
+    Meme *createMeme() {
         return new PolitMeme;
     }
 };
 
-class Human
-{
+class Human {
     string name;
     bool isLovingLegendary;
     bool isLovingAnime;
     bool isLovingHaha;
     bool isLovingPolit;
 public:
-    Human(bool a, bool b, bool c, string n){
+    Human(){
+        isLovingLegendary = false;
+        isLovingAnime = false;
+        isLovingHaha = false;
+        isLovingPolit = false;
+        name = "";
+    }
+    void setLovingAnime(bool a){
+        isLovingAnime = a;
+    }
+    void setLovingHaha(bool b){
+        isLovingHaha = b;
+    }
+    void setLovingPolit(bool c){
+        isLovingPolit = c;
+    }
+    Human(bool a, bool b, bool c, string n) {
         isLovingAnime = a;
         isLovingHaha = b;
         isLovingPolit = c;
@@ -104,34 +111,38 @@ public:
     string getname(){
         return name;
     }
+    void setName(string NM){
+        name = NM;
+    }
 
-    void review (Meme & m){
-        cout<<m.info() << ": " ;
-        if(m.info()=="LegendaryMeme"){
-            cout<<"perfect";
+
+    void review(Meme &m) {
+        cout << m.info() << ": ";
+        if (m.info() == "LegendaryMeme") {
+            cout << " amazing";
         }
 
-        if(m.info()=="AnimeMeme"){
+        if (m.info() == "AnimeMeme") {
             if (isLovingAnime) {
-                cout << " perfect";
-            } else{
-                cout<<"worse";
+                cout << " amazing";
+            } else {
+                cout << "Nein";
             }
         }
 
-        if(m.info()=="HahaMeme"){
+        if (m.info() == "HahaMeme") {
             if (isLovingHaha) {
-                cout << " perfect";
-            } else{
-                cout<<"worse";
+                cout << " amazing";
+            } else {
+                cout << "Nein";
             }
         }
 
-        if(m.info()=="PolitMeme"){
+        if (m.info() == "PolitMeme") {
             if (isLovingPolit) {
-                cout << " perfect";
-            } else{
-                cout<<"worse";
+                cout << " amazing";
+            } else {
+                cout << "Nein";
             }
         }
 
@@ -140,37 +151,102 @@ public:
 };
 
 
+class HumanBuilder
+{
+protected:
+    Human* p;
+public:
+    HumanBuilder(): p(NULL) {}
+    void setLovingAnime(bool a){
+        p->setLovingAnime(a);
+    }
+    void setLovingHaha(bool b){
+        p->setLovingHaha(b);
+    }
+    void setLovingPolit(bool c){
+        p->setLovingPolit(c);
+    }
+    void setName (string name){
+        p->setName(name);
+    }
+     ~HumanBuilder() {}
+     void createHuman() {p=new Human;}
+     Human* getHuman() { return p; }
+
+};
+
 int main() {
-    Human human1(true, false, false, "AnimeBoy");
-    Human human2(true, true, false, "FanBoy");
-    Human human3(false, true, false, "AverageMan");
-    Human human4(false, false, true, "Marginal");
-    Human human5(false, false, false, "Hater");
+//    Human human1(true, false, false, "AnimeBoy");
+//    Human human2(true, true, false, "FanBoy");
+//    Human human3(false, true, false, "AverageMan");
+//    Human human4(false, false, true, "Marginal");
+//    Human human5(false, false, false, "Hater");
+
+    HumanBuilder humanBuilder;
+
+    humanBuilder.createHuman();
+    humanBuilder.setLovingAnime(true);
+    humanBuilder.setLovingHaha(false);
+    humanBuilder.setLovingPolit(false);
+    humanBuilder.setName("AnimeBoy");
+
+    Human* human1 = humanBuilder.getHuman();
+
+    humanBuilder.createHuman();
+    humanBuilder.setLovingAnime(true);
+    humanBuilder.setLovingHaha(true);
+    humanBuilder.setLovingPolit(false);
+    humanBuilder.setName("FanBoy");
+
+    Human* human2 = humanBuilder.getHuman();
+
+    humanBuilder.createHuman();
+    humanBuilder.setLovingAnime(false);
+    humanBuilder.setLovingHaha(true);
+    humanBuilder.setLovingPolit(false);
+    humanBuilder.setName("AverageBoy");
+
+    Human* human3 = humanBuilder.getHuman();
+
+    humanBuilder.createHuman();
+    humanBuilder.setLovingAnime(false);
+    humanBuilder.setLovingHaha(false);
+    humanBuilder.setLovingPolit(true);
+    humanBuilder.setName("Marginal");
+
+    Human* human4 = humanBuilder.getHuman();
+
+    humanBuilder.createHuman();
+    humanBuilder.setLovingAnime(false);
+    humanBuilder.setLovingHaha(false);
+    humanBuilder.setLovingPolit(false);
+    humanBuilder.setName("Hater");
+
+    Human* human5 = humanBuilder.getHuman();
 
     LegendaryFactory *legendary_factory = new LegendaryFactory;
     AnimeFactory *anime_factory = new AnimeFactory;
     HahaFactory *haha_factory = new HahaFactory;
     PolitFactory *polit_factory = new PolitFactory;
 
-    vector<Meme*> m;
+    vector<Meme *> m;
     m.push_back(legendary_factory->createMeme());
     m.push_back(anime_factory->createMeme());
     m.push_back(haha_factory->createMeme());
     m.push_back(polit_factory->createMeme());
 
     vector<Human> h;
-    h.push_back(human1);
-    h.push_back(human2);
-    h.push_back(human3);
-    h.push_back(human4);
-    h.push_back(human5);
+    h.push_back(*human1);
+    h.push_back(*human2);
+    h.push_back(*human3);
+    h.push_back(*human4);
+    h.push_back(*human5);
 
     for (Human x : h) {
         cout << x.getname() << endl;
-        for (Meme  *y : m) {
-        x.review(*y);
+        for (Meme *y : m) {
+            x.review(*y);
         }
         cout << endl;
     }
 }
-
