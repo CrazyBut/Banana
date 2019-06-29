@@ -25,7 +25,7 @@ bool ExpressionParser::isOperator(string token) {
 }
 
 int ExpressionParser::priority(string token) {
-    if (token == "(") return 1;
+    if ((token == "(") || (token == ")")) return 1;
     if ((token == "+") || (token == "-")) return 2;
     if ((token == "*") || (token == "/")) return 3;
     return 4;
@@ -77,13 +77,14 @@ list<string> ExpressionParser::parse(string infix) {
             }
 
         } else {
-            string buff="";
-            while (isdigit(curr)!=false){
-                buff+=curr;
-                curr=infix[i];
-                i++;
-            }
-            postfix.push_back(buff);
+//            string buff="";
+//            while (isdigit(curr)!=false){
+//                buff+=curr;
+//                curr=infix[i];
+//                i++;
+//            }
+
+            postfix.push_back(currs.assign(1, curr));
         }
         prev = curr;
     }
@@ -96,8 +97,8 @@ list<string> ExpressionParser::parse(string infix) {
         } else {
         	flag = false;
             throw logic_error ("Скобки не согласованы.");
-       
-            
+
+
         }
     }
     //string buff=buff.assign(postfix.begin(),postfix.rend())
