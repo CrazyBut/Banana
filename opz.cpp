@@ -8,25 +8,23 @@
 
 using namespace std;
 
-// curr = текущ элент в виде char
-// currs = текущ элент в виде string
-
 bool ExpressionParser::isDelimiter(string token) {
-    if (token.length() != 1) return false; // проверка на двойную операцию
+    if (token.length() != 1) return false;
     for (int i = 0; i < delimiters.length(); i++) {
-        if (token[0] == delimiters[i]) return true; // token = массив с разделителями
+        if (token[0] == delimiters[i]) return true;
     }
     return false;
 }
 
 bool ExpressionParser::isOperator(string token) {
+    if (token == ("u-")) return true;
     for (int i = 0; i < operators.length(); i++) {
         if (token[0] == operators[i]) return true;
     }
     return false;
 }
 
-int ExpressionParser::priority(string token) { // смотрим приоритеты
+int ExpressionParser::priority(string token) {
     if (token == "(") return 1;
     if ((token == "+") || (token == "-")) return 2;
     if ((token == "*") || (token == "/")) return 3;
@@ -34,31 +32,31 @@ int ExpressionParser::priority(string token) { // смотрим приорит�
 }
 
 list<string> ExpressionParser::parse(string infix) {
-    list<string> postfix; // создаем лист string'of
-    deque<string> stack1; // сохдаем очередь для операций
+    list<string> postfix;
+    deque<string> stack1;
+    //StringTokenizer tokenizer = new StringTokenizer(infix, delimiters, true);
     string prev = "";
 
+    //char infix1[infix.size() + 1];
+    //strcpy(infix1, infix.c_str());
     string currs;
     int i = 0;
 
-    char curr = infix[i]; // проверка каждого элемента строки
+    char curr = infix[i];
     while (curr != 0) {
         curr = infix[i];
         i++;
-        if (isOperator(prev) && isOperator(currs.assign(1, curr))) { // если предыдущий и текущий сымволы операторы, то ошибка
+        if (isOperator(prev) && isOperator(currs.assign(1, curr))) {
             flag = false;
             throw logic_error("Некорректное выражение.");
         }
-
-        // continue - если условие соблюдено, то возвращается в начало цикла
-
         if (curr == 0)continue;
-        if (currs.assign(1, curr) == " ") continue;       // копируем один элем. curr в currs и сравниваем с " "
-        if (isDelimiter(currs.assign(1, curr))) {                                                  // копируем один элем. curr в currs и проверяем на разделитель
-            if (currs.assign(1, curr) == "(") stack1.push_back(currs.assign(1, curr));  // проверка на скобки
+        if (currs.assign(1, curr) == " ") continue;
+        if (isDelimiter(currs.assign(1, curr))) {
+            if (currs.assign(1, curr) == "(") stack1.push_back(currs.assign(1, curr));
             else if (currs.assign(1, curr) == ")") {
                 while (stack1.front() != "(") {
-                    postfix.push_back(stack1.front()); // убираем эл-т сверху
+                    postfix.push_back(stack1.front());
                     stack1.pop_front();
                     if (stack1.size() == 0) {
                         flag = false;
@@ -66,21 +64,23 @@ list<string> ExpressionParser::parse(string infix) {
                     }
                 }
                 stack1.pop_front();
-            }
-            else {
+            } else {
+
+
                 while ((stack1.size() != 0) && (priority(currs.assign(1, curr)) <= priority(stack1.front()))) {
                     postfix.push_back(stack1.front());
                     stack1.pop_front();
                 }
 
+
                 stack1.push_front(currs.assign(1, curr));
             }
 
         } else {
-            string buff = ""; // временная буферная строка для n-значных чисед
-            while (isdigit(curr) != false) {
-                buff += curr;
-                curr = infix[i];
+            string buff="";
+            while (isdigit(curr)!=false){
+                buff+=curr;
+                curr=infix[i];
                 i++;
             }
             postfix.push_back(buff);
@@ -89,24 +89,26 @@ list<string> ExpressionParser::parse(string infix) {
     }
 
 
-    while (stack1.size() != 0) {  //проверяет, не осталось ли ничего лишнего в строке
+    while (stack1.size() != 0) {
         if (isOperator(stack1.front())) {
             postfix.push_back(stack1.front());
             stack1.pop_front();
         } else {
-            cout << "Скобки не согласованы.";
-            flag = false;
-            return postfix;
+        	flag = false;
+            throw logic_error ("Скобки не согласованы.");
+       
+            
         }
     }
+    //string buff=buff.assign(postfix.begin(),postfix.rend())
     return postfix;
 }
 
 
 double Calculator::calc(list<string> postfix) {
     stack<double> stack;
-    for (string x : postfix) {  //for each - проходим по всем объектам класса (x - каждый элемент постфикса)
-        const char *buff = x.c_str(); // c_str превращает string в const char* (для дебага)
+    for (string x : postfix) {
+        const char *buff = x.c_str();
         if (x.c_str() != NULL) {
             if (x == ("+")) {
                 double a = stack.top();
@@ -132,11 +134,10 @@ double Calculator::calc(list<string> postfix) {
                 stack.pop();
 
                 stack.push(b / a);
-            } else stack.push(stod(x)); //srt to double - последний элемент строки окажется в стеке
+            } else stack.push(stod(x));
         }
     }
     double result = stack.top();
     stack.pop();
     return result;
 }
-
