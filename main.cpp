@@ -9,8 +9,10 @@
 
 using namespace std;
 
+// Степень только одним числом, нихао
+
 int main() {
-    string s = " ( 3 -  ( 3 * 2 )  + 1 ) ";
+    string s = "( 2 + 5 ) ^ 2 ^ 2 /  7 ^ 2";
     ExpressionParser n;
     Calculator calculator;
     list<string> expression;

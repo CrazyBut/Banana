@@ -13,32 +13,45 @@ bool ExpressionParser::isDelimiter(string token) {
     for (int i = 0; i < delimiters.length(); i++) {
         if (token[0] == delimiters[i]) return true;
     }
+    for(int i = 0 ; i<operators.size();i++){
+        if (token[0] == operators[i].get_name())return true;
+    }
     return false;
 }
 
 bool ExpressionParser::isOperator(string token) {
-    if (token == ("u-")) return true;
-    for (int i = 0; i < operators.length(); i++) {
-        if (token[0] == operators[i]) return true;
+    for (int i = 0; i < operators.size(); i++) {
+        if (token[0] == operators[i].get_name()) return true;
     }
     return false;
 }
 
 int ExpressionParser::priority(string token) {
-    if ((token == "(") || (token == ")")) return 1;
-    if ((token == "+") || (token == "-")) return 2;
-    if ((token == "*") || (token == "/")) return 3;
+    if (token == "(") return 1;
+    for (int i = 0; i < operators.size() ; ++i) {
+        if(token[0] == operators[i].get_name()){ return operators[i].get_priority();}
+    }
     return 4;
 }
 
 list<string> ExpressionParser::parse(string infix) {
+int countDigit = 0;
+int countOperation = 0;
+    Operator add('+',2);
+    Operator sub('-',2);
+    Operator mul('*',3);
+    Operator div('/',3);
+    Operator stepen('^',4);
+    operators.push_back(add);
+    operators.push_back(sub);
+    operators.push_back(mul);
+    operators.push_back(div);
+    operators.push_back(stepen);
     list<string> postfix;
     deque<string> stack1;
-    //StringTokenizer tokenizer = new StringTokenizer(infix, delimiters, true);
     string prev = "";
 
-    //char infix1[infix.size() + 1];
-    //strcpy(infix1, infix.c_str());
+
     string currs;
     int i = 0;
 
@@ -53,8 +66,10 @@ list<string> ExpressionParser::parse(string infix) {
         if (curr == 0)continue;
         if (currs.assign(1, curr) == " ") continue;
         if (isDelimiter(currs.assign(1, curr))) {
-            if (currs.assign(1, curr) == "(") stack1.push_back(currs.assign(1, curr));
+            if (currs.assign(1, curr) == "(") { stack1.push_back(currs.assign(1, curr));
+            countOperation--;}
             else if (currs.assign(1, curr) == ")") {
+                countOperation--;
                 while (stack1.front() != "(") {
                     postfix.push_back(stack1.front());
                     stack1.pop_front();
@@ -76,14 +91,10 @@ list<string> ExpressionParser::parse(string infix) {
                 stack1.push_front(currs.assign(1, curr));
             }
 
-        } else {
-//            string buff="";
-//            while (isdigit(curr)!=false){
-//                buff+=curr;
-//                curr=infix[i];
-//                i++;
-//            }
+            countOperation++;
 
+        } else {
+            countDigit++;
             postfix.push_back(currs.assign(1, curr));
         }
         prev = curr;
@@ -97,12 +108,13 @@ list<string> ExpressionParser::parse(string infix) {
         } else {
         	flag = false;
             throw logic_error ("Скобки не согласованы.");
-
-
+       
+            
         }
     }
-    //string buff=buff.assign(postfix.begin(),postfix.rend())
-    return postfix;
+    if (countOperation + 1 != countDigit)throw logic_error("Неверное выражение");
+
+        return postfix;
 }
 
 
@@ -135,10 +147,25 @@ double Calculator::calc(list<string> postfix) {
                 stack.pop();
 
                 stack.push(b / a);
-            } else stack.push(stod(x));
+
+            } else if (x == ("^")) {
+                double a = stack.top();
+                stack.pop();
+                double b = stack.top();
+                stack.pop();
+                double result = b;
+                for (int i = 1; i < a ; ++i) {
+                    result *= b;
+                }
+                stack.push(result);
+            }
+
+            else stack.push(stod(x));
+
         }
     }
     double result = stack.top();
     stack.pop();
     return result;
 }
+
