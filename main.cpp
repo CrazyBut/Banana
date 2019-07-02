@@ -156,7 +156,12 @@ class HumanBuilder
 protected:
     Human* p;
 public:
-    HumanBuilder(): p(NULL) {}
+
+//    HumanBuilder(): p(NULL) {}
+
+    HumanBuilder() {
+        p = new Human;
+    }
     void setLovingAnime(bool a){
         p->setLovingAnime(a);
     }
@@ -170,9 +175,13 @@ public:
         p->setName(name);
     }
      ~HumanBuilder() {}
-     void createHuman() {p=new Human;}
-     Human* getHuman() { return p; }
 
+     void reset() { delete(p);
+    p = new Human;
+    }
+     Human* createHuman() { return p; }
+
+   // void reset() { p = new Human;} // метод создания 0 человека
 };
 
 int main() {
@@ -184,45 +193,47 @@ int main() {
 
     HumanBuilder humanBuilder;
 
-    humanBuilder.createHuman();
+//    humanBuilder.reset();
     humanBuilder.setLovingAnime(true);
     humanBuilder.setLovingHaha(false);
     humanBuilder.setLovingPolit(false);
     humanBuilder.setName("AnimeBoy");
 
-    Human* human1 = humanBuilder.getHuman();
+    Human* human1 = humanBuilder.createHuman();
 
-    humanBuilder.createHuman();
+    humanBuilder.reset();
+
+//    humanBuilder.reset();
     humanBuilder.setLovingAnime(true);
     humanBuilder.setLovingHaha(true);
     humanBuilder.setLovingPolit(false);
     humanBuilder.setName("FanBoy");
 
-    Human* human2 = humanBuilder.getHuman();
+    Human* human2 = humanBuilder.createHuman();
 
-    humanBuilder.createHuman();
+//    humanBuilder.reset();
     humanBuilder.setLovingAnime(false);
     humanBuilder.setLovingHaha(true);
     humanBuilder.setLovingPolit(false);
     humanBuilder.setName("AverageBoy");
 
-    Human* human3 = humanBuilder.getHuman();
+    Human* human3 = humanBuilder.createHuman();
 
-    humanBuilder.createHuman();
+//    humanBuilder.reset();
     humanBuilder.setLovingAnime(false);
     humanBuilder.setLovingHaha(false);
     humanBuilder.setLovingPolit(true);
     humanBuilder.setName("Marginal");
 
-    Human* human4 = humanBuilder.getHuman();
+    Human* human4 = humanBuilder.createHuman();
 
-    humanBuilder.createHuman();
+//    humanBuilder.reset();
     humanBuilder.setLovingAnime(false);
     humanBuilder.setLovingHaha(false);
     humanBuilder.setLovingPolit(false);
     humanBuilder.setName("Hater");
 
-    Human* human5 = humanBuilder.getHuman();
+    Human* human5 = humanBuilder.createHuman();
 
     LegendaryFactory *legendary_factory = new LegendaryFactory;
     AnimeFactory *anime_factory = new AnimeFactory;
