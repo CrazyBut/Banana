@@ -35,8 +35,8 @@ int ExpressionParser::priority(string token) {
 }
 
 list<string> ExpressionParser::parse(string infix) {
-int countDigit = 0;
-int countOperation = 0;
+    int countDigit = 0;
+    int countOperation = 0;
     Operator add('+',2);
     Operator sub('-',2);
     Operator mul('*',3);
@@ -66,7 +66,7 @@ int countOperation = 0;
         if (curr == 0)continue;
         if (currs.assign(1, curr) == " ") continue;
         if (isDelimiter(currs.assign(1, curr))) {
-            if (currs.assign(1, curr) == "(") { stack1.push_back(currs.assign(1, curr));
+            if (currs.assign(1, curr) == "(") { stack1.push_front(currs.assign(1, curr));
             countOperation--;}
             else if (currs.assign(1, curr) == ")") {
                 countOperation--;
@@ -160,7 +160,25 @@ double Calculator::calc(list<string> postfix) {
                 stack.push(result);
             }
 
-            else stack.push(stod(x));
+//            else if (x == ("(")) {
+//                double a = stack.top();
+//                stack.pop();
+//                double b = stack.top();
+//                stack.pop();
+//                stack.push(x);
+//            }
+//
+//            else if (x == (")")) {
+//
+//                double a = stack.top();
+//                stack.pop();
+//                double b = stack.top();
+//                stack.pop();
+//          }
+
+            else
+
+            stack.push(stod(x));
 
         }
     }
