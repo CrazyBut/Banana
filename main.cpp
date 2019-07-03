@@ -9,7 +9,6 @@
 
 using namespace std;
 
-// Степень только одним числом, нихао
 
 int main() {
     string s = "( 2 + 5 ) ^ 2 ^ 2 /  7 ^ ( 1 + 1 )";

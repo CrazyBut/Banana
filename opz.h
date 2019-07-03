@@ -1,6 +1,5 @@
 #ifndef OPZ_FROM_JAVA_OPZ_H
 #define OPZ_FROM_JAVA_OPZ_H
-#define ADDITION "+"
 #include <iostream>
 #include <stack>
 #include <string.h>
