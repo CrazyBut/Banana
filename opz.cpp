@@ -67,7 +67,7 @@ list<string> ExpressionParser::parse(string infix) {
         if (currs.assign(1, curr) == " ") continue;
         if (isDelimiter(currs.assign(1, curr))) {
             if (currs.assign(1, curr) == "(") { stack1.push_front(currs.assign(1, curr));
-            countOperation--;}
+                countOperation--;}
             else if (currs.assign(1, curr) == ")") {
                 countOperation--;
                 while (stack1.front() != "(") {
@@ -159,22 +159,6 @@ double Calculator::calc(list<string> postfix) {
                 }
                 stack.push(result);
             }
-
-//            else if (x == ("(")) {
-//                double a = stack.top();
-//                stack.pop();
-//                double b = stack.top();
-//                stack.pop();
-//                stack.push(x);
-//            }
-//
-//            else if (x == (")")) {
-//
-//                double a = stack.top();
-//                stack.pop();
-//                double b = stack.top();
-//                stack.pop();
-//          }
 
             else
 
